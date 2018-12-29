@@ -10,6 +10,7 @@
 
 - Para rodar:
     - ```npm install```
+    - ```mongod```
     - ```node server.js```
 
 ## Rota de Exploração
