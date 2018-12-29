@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Simple API Restful</title>
+
+    <!-- Icon -->
+    <link rel="icon" type="image/png" href="/static/image/rocket-154997_640.png" />
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link rel="stylesheet" href="https://code.getmdl.io/1.3.0/material.deep_purple-blue.min.css" />
+
+    <!-- Scripts -->
+    <script defer src="https://code.getmdl.io/1.3.0/material.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+        crossorigin="anonymous"></script>
+    <style>
+        main {
+            background: url('/static/image/great-bear-1426516_1280.png') center / cover;
+        }
+
+        .demo-layout-waterfall .mdl-layout__header-row .mdl-navigation__link:last-of-type {
+            padding-right: 0;
+        }
+
+        /* Wide card */
+
+        .demo-card-wide.mdl-card,
+        .session-card-wide.mdl-card,
+        .create-user-card-wide.mdl-card,
+        .user-info-card-wide.mdl-card,
+        .delete-user-card-wide {
+            margin: auto;
+            width: 40%;
+            margin-top: 2vh;
+        }
+
+        .mdl-textfield {
+            margin: auto;
+            width: 60%;
+        }
+
+        .demo-card-wide>.mdl-card__title {
+            color: #fff;
+            height: 26vh;
+            background: url('/static/image/space-1951858_640.png') center / cover;
+        }
+
+        .session-card-wide>.mdl-card__title {
+            color: #fff;
+            height: 26vh;
+            background: url('/static/image/rocket-2680282_640.jpg') center / cover;
+        }
+
+        .create-user-card-wide>.mdl-card__title {
+            color: #fff;
+            height: 26vh;
+            background: url('/static/image/sahara-3842659_640.png') center / cover;
+        }
+
+        .user-info-card-wide>.mdl-card__title {
+            color: #757245;
+            height: 26vh;
+            background: url('/static/image/jupiter-3485371_640.png') center / cover;
+        }
+
+        .delete-user-card-wide>.mdl-card__title {
+            color: #fff;
+            height: 26vh;
+            background: url('/static/image/earth-2309897_640.png') center / cover;
+        }
+
+        .mdl-card__actions {
+            margin: auto;
+            width: 100%;
+        }
+
+        .mdl-list__item-secondary-action {
+            cursor: pointer;
+        }
+
+        #loading-login {
+            width: 100%;
+        }
+
+        #infoSession {
+            margin: auto;
+            width: 65%;
+        }
+
+        #updateListInfo {
+            font-style: italic;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Simple header with scrollable tabs. -->
+    <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
+        <header class="mdl-layout__header">
+            <div class="mdl-layout__header-row">
+                <!-- Title -->
+                <span class="mdl-layout-title">
+                    <i class="material-icons">vpn_key</i> Simple SSO API Restful
+                </span>
+            </div>
+            <!-- Tabs -->
+            <div class="mdl-layout__tab-bar mdl-js-ripple-effect">
+                <a href="#login" class="mdl-layout__tab is-active">Start a Session</a>
+                <a href="#manage_sessions" class="mdl-layout__tab">Manage Sessions</a>
+                <a href="#create_a_user" class="mdl-layout__tab">Create user</a>
+                <a href="#get_a_user" class="mdl-layout__tab">User info</a>
+                <a href="#delete_a_user" class="mdl-layout__tab">Delete user</a>
+            </div>
+        </header>
+        <main class="mdl-layout__content">
+
+            <!-- Login -->
+            <section class="mdl-layout__tab-panel is-active" id="login">
+                <div class="page-content">
+
+                    <div class="demo-card-wide mdl-card mdl-shadow--2dp">
+                        <div class="mdl-card__title">
+                            <h2 class="mdl-card__title-text">Login</h2>
+                        </div>
+                        <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label for-login">
+                            <input class="mdl-textfield__input" type="text" id="email">
+                            <label class="mdl-textfield__label" for="sample3">email</label>
+                        </div>
+                        <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label for-login">
+                            <input class="mdl-textfield__input" type="password" id="password">
+                            <label class="mdl-textfield__label" for="sample3">password</label>
+                        </div>
+                        <div class="mdl-card__actions" align='center'>
+                            <button id='loginBtn' class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored">
+                                Start Session
+                            </button>
+                        </div>
+                        <div id="loading-login" class="mdl-progress mdl-js-progress mdl-progress__indeterminate"></div>
+                        <p id="infoSession"></p>
+                    </div>
+
+                </div>
+            </section>
+
+            <!-- List All Session from User -->
+            <section class="mdl-layout__tab-panel" id="manage_sessions">
+                <div class="page-content">
+
+                    <div class="session-card-wide mdl-card mdl-shadow--2dp">
+                        <div class="mdl-card__title">
+                            <h2 class="mdl-card__title-text">Manage Sessions</h2>
+                        </div>
+                        <ul class="list-sessions mdl-list">
+                            <!-- List add dinamically -->
+                        </ul>
+                        <div class="mdl-card__actions" align='center'>
+                            <p id="updateListInfo"></p>
+                        </div>
+                    </div>
+
+                </div>
+            </section>
+
+            <section class="mdl-layout__tab-panel" id="create_a_user">
+                <div class="page-content">
+                    <div class="create-user-card-wide mdl-card mdl-shadow--2dp">
+                        <div class="mdl-card__title">
+                            <h2 class="mdl-card__title-text">Create a user</h2>
+                        </div>
+                        <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                            <input class="mdl-textfield__input" type="text" id="create-username">
+                            <label class="mdl-textfield__label" for="sample3">Full Name</label>
+                        </div>
+                        <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                            <input class="mdl-textfield__input" type="text" id="create-email">
+                            <label class="mdl-textfield__label" for="sample3">email</label>
+                        </div>
+                        <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                            <input class="mdl-textfield__input" type="password" id="create-password">
+                            <label class="mdl-textfield__label" for="sample3">password</label>
+                        </div>
+                        <div class="mdl-card__actions" align='center'>
+                            <button id='createUserBtn' class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored">
+                                Create
+                            </button>
+                        </div>
+                        <div id="loading-create-user" class="mdl-progress mdl-js-progress mdl-progress__indeterminate"></div>
+                    </div>
+                </div>
+            </section>
+            <section class="mdl-layout__tab-panel" id="get_a_user">
+                <div class="page-content">
+
+                    <div class="user-info-card-wide mdl-card mdl-shadow--2dp">
+                        <div class="mdl-card__title">
+                            <h2 class="mdl-card__title-text">User info</h2>
+                        </div>
+                        <ul class="list-user-info mdl-list">
+
+                        </ul>
+                    </div>
+
+                </div>
+            </section>
+            <section class="mdl-layout__tab-panel" id="delete_a_user">
+                <div class="page-content">
+
+                    <div class="delete-user-card-wide mdl-card mdl-shadow--2dp">
+                        <div class="mdl-card__title">
+                            <h2 class="mdl-card__title-text">Delete User</h2>
+                        </div>
+                        <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                            <input class="mdl-textfield__input" type="text" id="delete-email">
+                            <label class="mdl-textfield__label" for="sample3">email</label>
+                        </div>
+                        <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                            <input class="mdl-textfield__input" type="password" id="delete-password">
+                            <label class="mdl-textfield__label" for="sample3">password</label>
+                        </div>
+                        <div class="mdl-card__actions" align='center'>
+                            <button id='deleteBtn' class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored">
+                                DELETE
+                            </button>
+                        </div>
+                    </div>
+
+                </div>
+            </section>
+        </main>
+    </div>
+    <div id="toast" class="mdl-js-snackbar mdl-snackbar">
+        <div class="mdl-snackbar__text"></div>
+        <button class="mdl-snackbar__action" type="button"></button>
+    </div>
+    <dialog class="mdl-dialog">
+        <h4 class="mdl-dialog__title">Are you sure?</h4>
+        <div class="mdl-dialog__content">
+            <p>
+                Are you sure that you want to finish this session?
+            </p>
+        </div>
+        <div class="mdl-dialog__actions">
+            <button type="button" class="mdl-button yes">Yes</button>
+            <button type="button" class="mdl-button close">No</button>
+        </div>
+    </dialog>
+    <script type="text/javascript" src="/scripts/explorer.js"></script>
+</body>
+
+</html>
