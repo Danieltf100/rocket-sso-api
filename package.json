@@ -1,0 +1,28 @@
+{
+  "name": "homolog-api",
+  "version": "1.0.0",
+  "description": "API RESTful to TCC Application",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "API",
+    "RESTful",
+    "server",
+    "CRUD"
+  ],
+  "author": "Daniel T. Fernandes",
+  "license": "ISC",
+  "devDependencies": {
+    "node-pretty-log": "^1.1.0",
+    "nodemon": "^1.18.9"
+  },
+  "dependencies": {
+    "body-parser": "^1.18.3",
+    "cryptr": "^4.0.2",
+    "express": "^4.16.4",
+    "js-sha512": "^0.8.0",
+    "mongoose": "^5.4.0"
+  }
+}
