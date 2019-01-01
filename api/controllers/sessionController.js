@@ -8,6 +8,40 @@ var mongoose = require('mongoose'),
     Users = mongoose.model('Users'),
     Sessions = mongoose.model('Sessions');
 
+/**
+ * 
+ * @param {*} key
+ * @returns {Integer}
+ *      -1 if an error ocurred
+ *      0 if any session was expired
+ *      1 if the session Expired
+ */
+function isSessionExpired(key, created_date) {
+    log('info', 'Checking time of the session');
+    try {
+        var startSession = new Date(created_date),
+            currentTime = new Date();
+
+        var diff = currentTime.getTime() - startSession.getTime();
+        if (diff > env.policy.session_expiration) {
+            Sessions.remove({ _id: key }, (rerr, r) => {
+                if (rerr) {
+                    log('warn', 'Oops, something going wrong', { task: 'Removing a session' });
+                    log('error', rerr);
+                    return -1;
+                } else {
+                    log('info', 'The session was registered with time greater than the maximum accepted. The session was removed');
+                    return 1;
+                }
+            })
+        }
+        return 0;
+    } catch (terr) {
+        log('error', 'Oops', terr);
+        return -1;
+    }
+}
+
 exports.login = (req, res) => {
 
     // Try find user
@@ -31,7 +65,7 @@ exports.login = (req, res) => {
                     if (errOnSave) {
                         log('warn', 'Oops, something going wrong', { task: 'Starting a session' });
                         res.send(errOnSave);
-                    } else {                        
+                    } else {
                         log('success', 'Session started');
                         res.json({ SessionKey: savedSession._id });
                     }
@@ -76,6 +110,10 @@ exports.list_all_sessions_from_user = (req, res) => {
             res.send(err);
         }
         if (session !== null && session !== undefined) {
+            if (isSessionExpired(key, session.created_date) === 1) {
+                res.send({message: "The session expired"});
+                return;
+            }
             log('info', 'Checking all sessions from the user ' + session.user._id);
             Sessions.find({
                 user: session.user
@@ -86,8 +124,13 @@ exports.list_all_sessions_from_user = (req, res) => {
                     res.send(s_err);
                 }
                 log('success', 'Listing all sessions from user ' + session.user._id);
-                res.json(sessions);
-
+                var resp = [];
+                sessions.map( (el, i, array) => {
+                    if (isSessionExpired(el._id, el.created_date) !== 1) {
+                        resp.push(el);
+                    }
+                });
+                res.json(resp);
             });
         }
         else {

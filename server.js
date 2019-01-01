@@ -25,7 +25,8 @@ try {
         var env  = JSON.parse(fs.readFileSync(path, 'utf8'));
         var apiToken = sha512(env.apiToken);
         apiToken = apiToken.substring(0, 31);
-        fs.writeFileSync(path, JSON.stringify({ apiToken: apiToken }));
+        env.apiToken = apiToken;
+        fs.writeFileSync(path, JSON.stringify(env));
         log('success','> The API Token was updated');
     } catch (err) {
         log('error','  > The API Token can not be updated.');
