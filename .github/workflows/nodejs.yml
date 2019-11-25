@@ -1,7 +1,9 @@
 name: Node CI
 
-on: [push]
-
+on: 
+  push:
+    tags:
+      - run-test
 jobs:
   build:
 
