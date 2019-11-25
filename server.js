@@ -11,28 +11,28 @@ var express = require('express'),
 
 try {
     // mongoose instance connection url connection
-    log('info','   > Starting connection with database');
+    log('info', '   > Starting connection with database');
     mongoose.Promise = global.Promise;
     mongoose.connect('mongodb://localhost/HomolApi', { useNewUrlParser: true });
 
-    log('info','   > Setup app');
+    log('info', '   > Setup app');
     app.use(bodyParser.urlencoded({ extended: true }));
     app.use(bodyParser.json());
 
-    log('info','   > Updating API Token');
+    log('info', '   > Updating API Token');
     try {
         var path = './api/security/static/env.json';
-        var env  = JSON.parse(fs.readFileSync(path, 'utf8'));
+        var env = JSON.parse(fs.readFileSync(path, 'utf8'));
         var apiToken = sha512(env.apiToken);
         apiToken = apiToken.substring(0, 31);
         env.apiToken = apiToken;
         fs.writeFileSync(path, JSON.stringify(env));
-        log('success','> The API Token was updated');
+        log('success', '> The API Token was updated');
     } catch (err) {
-        log('error','  > The API Token can not be updated.');
+        log('error', '  > The API Token can not be updated.');
     }
 
-    log('info','   > Adding routes to app');
+    log('info', '   > Adding routes to app');
     // Imports
     var userRoute = require('./api/routes/UserRoutes');
     var sessionRoute = require('./api/routes/sessionRoutes');
@@ -43,13 +43,13 @@ try {
     userRoute(app);
     sessionRoute(app);
     viewRoute(app);
-    log('info','   > Adding and updating assets route');
+    log('info', '   > Adding and updating assets route');
     assetRoute(app);
-    log('info','   > Adding and updating scripts route');
+    log('info', '   > Adding and updating scripts route');
     scriptsRoute(app);
-    
 
-    log('info','   > Registering port to app');
+
+    log('info', '   > Registering port to app');
     app.listen(port);
     fs.writeFileSync('./log.json', JSON.stringify({
         time: {
@@ -67,3 +67,5 @@ try {
 } catch (err) {
     log('error', err);
 }
+
+module.exports = app;
